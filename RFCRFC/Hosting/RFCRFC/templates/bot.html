@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Bot</h1>
+        
+        <p>If you haven't received a response within 2 days, you can check the status of your application here.</p>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p class="alert">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% if status_message %}
+            <div class="status-message">
+                <p>{{ status_message }}</p>
+                
+                {% if app_id %}
+                <div class="report-section">
+                    <p>If your application has been pending for more than 2 days, you can report it to our admin bot:</p>
+                    <form action="{{ url_for('bot') }}" method="post">
+                        <input type="hidden" name="app_id" value="{{ app_id }}">
+                        <input type="hidden" name="report_to_admin" value="yes">
+                        <button type="submit" class="btn">Report to Admin Bot</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <form action="{{ url_for('bot') }}" method="post">
+            <div class="form-group">
+                <label for="app_id">Enter your Application ID:</label>
+                <input type="text" id="app_id" name="app_id" required>
+            </div>
+            
+            <button type="submit" class="btn">Check Status</button>
+        </form>
+        
+        <div class="links">
+            <a href="{{ url_for('index') }}">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

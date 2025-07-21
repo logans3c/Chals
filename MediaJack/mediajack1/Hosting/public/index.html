@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Processor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Video Processor</h1>
+        
+        <div class="upload-section">
+            <h2>Upload Video</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="videoFile">Select Video File:</label>
+                    <input type="file" id="videoFile" name="video" accept="video/*" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="processOption">Processing Option:</label>
+                    <select id="processOption" required>
+                        <option value="">-- Select Option --</option>
+                        <option value="mp4">Convert to MP4</option>
+                        <option value="720p">Resize to 720p</option>
+                        <option value="avi">Change codec to AVI</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="preset">Encoding Preset:</label>
+                    <select id="preset">
+                        <option value="divx">divx</option>
+                        <option value="flashvideo">flashvideo (not compatible with MP4)</option>
+                        <option value="podcast">podcast</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn">Process Video</button>
+            </form>
+            
+            <div id="uploadStatus" class="status-message"></div>
+        </div>
+
+        
+        <!-- Add rating section -->
+        <div class="rating-section">
+            <h2>Rate Our Service</h2>
+            <form id="ratingForm">
+                <div class="form-group">
+                    <label for="userId">Your User ID:</label>
+                    <input type="text" id="userId" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Rating:</label>
+                    <div class="rating-options">
+                        <label><input type="radio" name="rating" value="1" required> 1 (Poor)</label>
+                        <label><input type="radio" name="rating" value="2"> 2</label>
+                        <label><input type="radio" name="rating" value="3"> 3</label>
+                        <label><input type="radio" name="rating" value="4"> 4</label>
+                        <label><input type="radio" name="rating" value="5"> 5 (Excellent)</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comment">Comments (optional):</label>
+                    <textarea id="comment" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Submit Rating</button>
+            </form>
+            
+            <div id="ratingStatus" class="status-message"></div>
+        </div>
+        
+        <div class="history-section">
+            <h2>Activity Dashboard</h2>
+            <table id="activityTable">
+                <thead>
+                    <tr>
+                        <th>Original File</th>
+                        <th>Processing Option</th>
+                        <th>Timestamp</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="activityBody">
+                    <!-- Activity rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+

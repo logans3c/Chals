@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Note Count - NINJA Auth App{% endblock %}
+
+{% block content %}
+<section class="activity-container">
+    <div class="activity-box">
+        <h2>User Note Activity</h2>
+        <div class="user-stats">
+            <h3>{{ username }}</h3>
+            <div class="stats-item">
+                <span>Total Notes:</span>
+                <p>{{ note_count }}</p>
+            </div>
+            <div class="stats-item">
+                <span>Note Count Rank:</span>
+                <p>#{{ rank }}</p>
+            </div>
+        </div>
+        
+        <div class="activity-actions">
+            <a href="{{ url_for('user_activity', action='word_count', username=username) }}" class="btn primary">View Word Count</a>
+            <a href="{{ url_for('user_activity', action='user_stats', username=username) }}" class="btn secondary">Full Stats</a>
+        </div>
+    </div>
+    
+    <div class="activity-search">
+        <h3>Check Another User's Note Count</h3>
+        <form method="get" action="{{ url_for('user_activity') }}" class="search-form">
+            <input type="hidden" name="action" value="note_count">
+            <div class="form-group">
+                <input type="text" id="username" name="username" required placeholder="Enter username">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn primary">Check Activity</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

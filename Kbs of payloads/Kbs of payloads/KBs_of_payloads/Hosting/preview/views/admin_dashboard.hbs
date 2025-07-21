@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .metric {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            flex: 1;
+            margin: 0 10px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        <div class="metrics">
+            <div class="metric">
+                <h2>Total Users</h2>
+                <p>{{totalUsers}}</p>
+                <p>flag: {{df}}</p>
+            </div>
+            <div class="metric">
+                <h2>Total Notes</h2>
+                <p>{{totalNotes}}</p>
+            </div>
+            <div class="metric">
+                <h2>Active Users</h2>
+                <p>{{activeUsers}}</p>
+            </div>
+        </div>
+        <h2>User Management</h2>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- User rows will be populated here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch and display users
+        fetch('/admin/users')
+            .then(response => response.json())
+            .then(users => {
+                const userTableBody = document.querySelector('#userTable tbody');
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${new Date(user.created_at).toLocaleString()}</td>
+                        <td><button onclick="removeUser(${user.id})">Remove</button></td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            });
+
+        function removeUser(userId) {
+            if (confirm('Are you sure you want to remove this user?')) {
+                fetch(`/admin/users/${userId}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+</body>
+</html>

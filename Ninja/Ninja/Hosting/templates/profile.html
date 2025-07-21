@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - NINJA Auth App{% endblock %}
+
+{% block content %}
+<section class="profile-container">
+    <div class="profile-box">
+        <h2>User Profile</h2>
+        <div class="profile-info">
+            <div class="info-group">
+                <span>Username:</span>
+                <p>{{ current_user.username }}</p>
+            </div>
+            
+            <div class="info-group">
+                <span>Email:</span>
+                <p>{{ current_user.email }}</p>
+            </div>
+            
+            <div class="info-group">
+                <span>Member since:</span>
+                <p>{{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+            </div>
+            
+            <div class="info-group">
+                <span>Notes created:</span>
+                <p>{{ note_count }}</p>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <a href="{{ url_for('notes') }}" class="btn primary">My Notes</a>
+            <a href="{{ url_for('index') }}" class="btn secondary">Back to Home</a>
+            <a href="{{ url_for('auth', action='logout') }}" class="btn danger">Logout</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

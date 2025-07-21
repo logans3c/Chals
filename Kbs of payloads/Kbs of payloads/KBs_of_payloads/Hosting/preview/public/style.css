@@ -1,0 +1,123 @@
+nav {
+  background: linear-gradient(to right,rgb(43, 50, 89),rgb(34, 55, 53));
+  color:rgb(169, 83, 83);
+  padding: 15px 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+nav .nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+nav .logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  background: linear-gradient(45deg,rgb(173, 90, 90),rgb(150, 83, 83));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+nav ul {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+nav li {
+  list-style: none;
+  position: relative;
+}
+
+nav li a {
+  color:rgb(157, 49, 49);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+nav li a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color:rgb(135, 42, 42);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+nav li a:hover {
+  color:rgb(98, 77, 77);
+}
+
+nav li a:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+nav .active-link {
+  font-weight: 700;
+  color:rgb(145, 98, 98);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  nav .nav-container {
+      flex-direction: column;
+      gap: 15px;
+      padding: 15px;
+  }
+
+  nav ul {
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+  }
+
+  nav li {
+      width: 100%;
+      text-align: center;
+  }
+
+  nav li a {
+      display: block;
+      width: 100%;
+      padding: 10px;
+  }
+  
+}
+body {
+  background: linear-gradient(to right, rgb(43, 50, 89), rgb(34, 55, 53));
+  min-height: 100vh; /* Ensures the background covers the entire viewport */
+  margin: 0;
+  padding: 0;
+}
+
+.jumbotron {
+  background: transparent !important;  /* Removes the white background */
+  color: white;  /* Ensures text is readable */
+  border: none;
+  box-shadow: none;
+}
+
+.card{
+  background: transparent !important;  /* Removes the white background */
+  color: white;  /* Ensures text is readable */
+  border: none;
+  box-shadow: transition;
+
+}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}User Statistics - NINJA Auth App{% endblock %}
+
+{% block content %}
+<section class="activity-container">
+    <div class="activity-box">
+        <h2>Complete User Statistics</h2>
+        <div class="user-stats">
+            <h3>{{ username }}</h3>
+            <div class="stats-heading">Note Activity</div>
+            <div class="stats-item">
+                <span>Total Notes:</span>
+                <p>{{ note_count }}</p>
+            </div>
+            <div class="stats-item">
+                <span>Note Count Rank:</span>
+                <p>#{{ note_rank }}</p>
+            </div>
+            
+            <div class="stats-heading">Word Activity</div>
+            <div class="stats-item">
+                <span>Total Words Written:</span>
+                <p>{{ word_count }}</p>
+            </div>
+            <div class="stats-item">
+                <span>Word Count Rank:</span>
+                <p>#{{ word_rank }}</p>
+            </div>
+            
+            <div class="stats-item">
+                <span>Average Words per Note:</span>
+                <p>{% if note_count > 0 %}{{ (word_count / note_count) | round(1) }}{% else %}0{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    
+    {% include 'activity/activity_selector.html' %}
+</section>
+{% endblock %}

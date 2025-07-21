@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Web Application Firewall (WAF) Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        header {
+            background-color: #6c4974;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            width: 250px;
+            background-color: #333;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        nav a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #26254b;
+            padding: 10px;
+            border-left: 3px solid #1b211b;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #9c7272;
+            padding: 2px 4px;
+            font-family: Consolas, "Courier New", monospace;
+            border-radius: 3px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #866262;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #433636;
+        }
+        .collapsible {
+            background-color: #210e46;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+        }
+        .collapsible:after {
+            content: '\002B';
+            font-size: 13px;
+            float: right;
+        }
+        .active:after {
+            content: "\2212";
+        }
+        .content-collapsible {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: white;
+            border-left: 3px solid #0d1d3c;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Flask Web Application Firewall (WAF) Documentation</h1>
+    </header>
+
+    <nav>
+        <h2 style="padding: 10px; color: white;">Table of Contents</h2>
+        <a href="#overview">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#configuration">Configuration</a>
+        <a href="#rate-limiting">Rate Limiting</a>
+        <a href="#security-patterns">Security Patterns</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#error-handling">Error Handling</a>
+        <a href="#logging">Logging</a>
+        <a href="#middleware">Middleware</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#running">Running the Application</a>
+    </nav>
+
+    <div class="content">
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>This Flask application acts as a Web Application Firewall (WAF) that forwards requests to allowed destination apps while applying rate limiting and pattern-based security checks. It is designed to protect backend applications by inspecting incoming requests for malicious patterns, rate limiting requests based on the client's IP address, and ensuring requests adhere to defined rules.</p>
+        </section>
+
+        <section id="features">
+            <h2>Features</h2>
+            <ul>
+                <li><strong>Pattern-Based Security Checks:</strong> Uses a set of regular expression patterns to detect and block malicious requests.</li>
+                <li><strong>Rate Limiting:</strong> Limits the number of requests per second per IP address to prevent abuse.</li>
+                <li><strong>Logging:</strong> Detailed logging of requests, responses, and errors for monitoring and debugging.</li>
+                <li><strong>Proxying Requests:</strong> Forwards requests to allowed backend applications while filtering out unwanted or malicious traffic.</li>
+                <li><strong>Configuration:</strong> Easily configurable for different backend applications and security patterns.</li>
+            </ul>
+        </section>
+
+        <section id="configuration">
+            <h2>Configuration</h2>
+            <button type="button" class="collapsible">Allowed Apps</button>
+            <div class="content-collapsible">
+                <p>The application forwards requests to the following allowed backend applications:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>App Name</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>app1</td>
+                            <td><code>http://app1:65001/</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>You can modify the <code>ALLOWED_APPS</code> dictionary to include other backend applications as needed.</p>
+            </div>
+
+            <button type="button" class="collapsible">Rate Limiting</button>
+            <div class="content-collapsible">
+                <ul>
+                    <li><strong>Request Limit:</strong> 5 requests per second.</li>
+                    <li><strong>Block Time:</strong> 5 seconds.</li>
+                </ul>
+                <p>Adjust the <code>REQUEST_LIMIT</code> and <code>BLOCK_TIME</code> constants in the code to change the rate limiting behavior.</p>
+            </div>
+        </section>
+
+        <section id="security-patterns">
+            <h2>Security Patterns</h2>
+            <p>Security patterns are defined in a JSON file named <code>patterns.json</code>. Each entry in the file represents a type of attack and includes a list of regular expressions to match against request URLs and data.</p>
+            <pre><code>{
+                {
+                    "sql_injection": [
+                        "'",
+                        "\"",
+                        "(\\bunion\\b\\s*(all\\s*)?select\\b)",
+                        "(select\\b.*?\\bfrom\\b)",
+                        "(insert\\b.*?\\binto\\b)",
+                        "(update\\b.*?\\bset\\b)",
+                        "(delete\\b.*?\\bfrom\\b)",
+                        "(drop\\b\\s*table)",
+                        "(exec\\s*\\()",
+                        "(\\bsleep\\s*\\(\\s*\\d+\\s*\\))",
+                        "(benchmark\\s*\\(\\s*\\d+\\s*,\\s*md5\\s*\\()",
+                        "(\\bsubstr\\b|\\bsubstring\\b)",
+                        "(\\bchar\\b\\s*\\()",
+                        "(\\bconcat\\b\\s*\\()",
+                        "(\\bgroup_concat\\b\\s*\\()",
+                        "(--|#|\\/\\*)\\s*$",
+                        "(\\bor\\b\\s+1=1|\\band\\b\\s+1=1)",
+                        "(\\bor\\b\\s+[\\d\\w]+\\s*=\\s*[\\d\\w]+)",
+                        "(\\band\\b\\s+[\\d\\w]+\\s*=\\s*[\\d\\w]+)",
+                        "(create\\b.*?\\btable\\b)",
+                        "(exec\\s*\\(.*?\\bprocedure\\b)",
+                        "(alter\\b.*?\\btable\\b)"
+                    ],
+                    "xss": [
+                        "<",
+                        ">",
+                        "(<script.*?>.*?<\\/script>)",
+                        "(<img\\s+src\\s*=\\s*['\"]javascript:)",
+                        "(<iframe.*?>)",
+                        "(<svg.*?>)",
+                        "(onerror\\s*=\\s*['\"].*?['\"])",
+                        "(onload\\s*=\\s*['\"].*?['\"])",
+                        "(onclick\\s*=\\s*['\"].*?['\"])",
+                        "(<style.*?>.*?expression\\(.*?\\).*?<\\/style>)",
+                        "(<link\\s+rel=['\"]stylesheet['\"]\\s+href=['\"]javascript:)",
+                        "(<base\\s+href=['\"]javascript:)",
+                        "(javascript:|data:text\\/html)",
+                        "(document\\.cookie)",
+                        "(document\\.location|window\\.location)",
+                        "(localStorage|sessionStorage)",
+                        "(innerHTML\\s*=\\s*['\"].*?['\"])",
+                        "(eval\\s*\\()",
+                        "(alert\\s*\\()",
+                        "(srcdoc\\s*=\\s*['\"].*?['\"])",
+                        "((%3C|<)script(.*?)(%3E|>))",
+                        "<object.*?>|<embed.*?>|<applet.*?>",
+                        "(onfocus\\s*=|onblur\\s*=|onchange\\s*=|onmouseover\\s*=|onmouseout\\s*=)",
+                        "(setTimeout\\s*\\(|setInterval\\s*\\()"
+                    ],
+                    "path_traversal": [
+                          "\\.\\./"
+                    ],
+                    "ssti": [
+                          "\\{\\{.*?\\}\\}",
+                          "\\{\\{\\s*config\\.items\\s*\\}\\}",
+                          "\\$\\{.*?\\}",
+                          "<%.*?%>",
+                          "\\{\\{\\s*request\\.args",
+                          "(\\bimport\\b.*?\\bos\\b)",
+                          "(\\.\\w+\\s*\\()",
+                          "(#set\\s*\\(\\w+\\s*=)",
+                          "(eval\\s*\\()",
+                          "(process\\.env\\b)",
+                          "(global\\.|window\\.)",
+                          "(\\bexec\\b|\\bsystem\\b)",
+                          "(\\borg\\.apache\\.|freemarker\\.template\\.|javax\\.script\\.)"
+                      ]
+                  }
+                  
+}</code></pre>
+        </section>
+
+        <section id="endpoints">
+            <h2>Endpoints</h2>
+
+            <h3><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> <code>/app_name/</code> or <code>/app_name/&lt;path:endpoint&gt;</code></h3>
+            <p><strong>Description:</strong> Handles all requests and proxies them to the appropriate backend application.</p>
+            <p><strong>Parameters:</strong></p>
+            <ul>
+                <li><code>app_name</code>: The name of the backend application. Must be listed in <code>ALLOWED_APPS</code>.</li>
+                <li><code>endpoint</code>: The specific endpoint on the backend application to forward the request to.</li>
+            </ul>
+        </section>
+
+        <section id="error-handling">
+            <h2>Error Handling</h2>
+            <ul>
+                <li><strong>500 Internal Server Error:</strong> Returned when there is an error forwarding the request to the backend application.</li>
+                <li><strong>403 Forbidden:</strong> Returned if the request matches a security pattern or if the app is not allowed.</li>
+                <li><strong>429 Too Many Requests:</strong> Returned if the rate limit is exceeded.</li>
+            </ul>
+        </section>
+
+        <section id="logging">
+            <h2>Logging</h2>
+            <p>Logging is configured to provide detailed information about requests, responses, and errors. Logs include timestamps, log levels, and messages for auditing and debugging purposes.</p>
+        </section>
+
+        <section id="middleware">
+            <h2>Middleware</h2>
+
+            <h3><code>remove_server_and_handle_duplicates(response: Response) -> Response</code></h3>
+            <p><strong>Purpose:</strong> Removes the <code>Server</code> header from responses and handles duplicate headers to ensure consistent response formatting.</p>
+        </section>
+
+        <section id="requirements">
+            <h2>Requirements</h2>
+            <ul>
+                <li>Flask</li>
+                <li>Requests</li>
+                <li>JSON</li>
+                <li>Logging</li>
+            </ul>
+            <p>Ensure these dependencies are installed in your environment.</p>
+        </section>
+
+        <section id="running">
+            <h2>Running the Application</h2>
+            <p>To run the Flask WAF, execute the following command:</p>
+            <pre><code>python waf.py</code></pre>
+            <p>The WAF will start on <code>0.0.0.0:8001</code> by default. You can modify the port or host in the code as needed.</p>
+        </section>
+    </div>
+
+    <script>
+        const collapsibles = document.querySelectorAll(".collapsible");
+        collapsibles.forEach(item => {
+            item.addEventListener("click", function () {
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

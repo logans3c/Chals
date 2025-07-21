@@ -1,0 +1,28 @@
+{
+  "name": "rabid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.5",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "hbs": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.4",
+    "path": "^0.12.7",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  }
+}

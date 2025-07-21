@@ -1,0 +1,4 @@
+jinja is good honestly .. it keeps me away from xss with it's autoescape
+
+as an example,
+{{ username }} will be escaped automatically.

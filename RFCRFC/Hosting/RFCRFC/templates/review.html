@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Review Application</h1>
+        
+        <div class="application-details">
+            <p><strong>Application ID:</strong> {{ application.id }}</p>
+            <p><strong>Email:</strong> {{ application.email|safe }}</p>
+            <p><strong>Note:</strong> {{ application.note }}</p>
+            <p><strong>Current Status:</strong> {{ application.status }}</p>
+        </div>
+        
+        <form action="{{ url_for('review_application', app_id=application.id) }}" method="post">
+            <div class="form-group">
+                <label for="status">Update Status:</label>
+                <select id="status" name="status" required>
+                    <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="approved" {% if application.status == 'approved' %}selected{% endif %}>Approved</option>
+                    <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn">Update Status</button>
+        </form>
+        
+        <div class="links">
+            <a href="{{ url_for('admin_panel') }}">Back to Admin Panel</a>
+        </div>
+    </div>
+</body>
+</html>
