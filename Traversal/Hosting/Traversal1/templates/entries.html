@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entries for {{ user }}</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Optional: Link to a CSS file -->
+    <style>
+        body { font-family: sans-serif; }
+        .container { max-width: 800px; margin: 20px auto; padding: 15px; }
+        ul { list-style: none; padding: 0; }
+        li { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center; }
+        li img, li .no-thumb { margin-right: 15px; flex-shrink: 0; } /* Added flex-shrink */
+        .no-thumb { display: inline-block; width: 80px; height: 60px; border: 1px solid #ccc; text-align: center; line-height: 60px; vertical-align: middle; background-color: #f0f0f0; }
+        form div { margin-bottom: 10px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type=text], input[type=submit] { padding: 8px; }
+        input[type=text] { width: 100%; box-sizing: border-box; }
+        input[type=submit] { cursor: pointer; }
+        .flash { padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .flash.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .flash.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Entries for {{ user }}</h2>
+        <p><a href="/">Back Home</a></p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <h3>Existing Entries</h3>
+        <ul>
+        {% for e in results %}
+            <li>
+                {% if e[1] %} {# Check if thumbnail filename exists #}
+                {# Construct URL using the filename from e[1] #}
+                <img src="/thumbnail?path={{ e[1] | urlencode }}" width="80" alt="Thumbnail for {{ e[0][:20] }}..." style="vertical-align: middle;">
+                {% else %}
+                <span class="no-thumb">No Thumb</span>
+                {% endif %}
+                <span>{{ e[0] }}</span> {# Entry body #}
+            </li>
+        {% else %}
+            <li>No entries yet.</li>
+        {% endfor %}
+        </ul>
+        <hr>
+        <h2>New Entry</h2>
+        <form method="post" action="/new">
+            <div>
+                <label for="note">Note:</label>
+                <textarea id="note" name="note" rows="4" required></textarea>
+            </div>
+            <div>
+                <label for="thumb_filename">Thumbnail:</label>
+                <div style="display: flex;">
+                    <input type="text" id="thumb_filename" name="thumb_filename" style="flex: 1; margin-right: 10px;">
+                    <button type="button" onclick="openThumbnailGallery()">Choose Thumbnail</button>
+                </div>
+                <small>Click "Choose Thumbnail" to select from available images.</small>
+            </div>
+            <div>
+                <input type="submit" value="Add Entry">
+            </div>
+        </form>
+        
+        <script>
+            function openThumbnailGallery() {
+                window.open('/thumbnails', 'thumbnail_gallery', 'width=800,height=600');
+            }
+        </script>
+    </div>
+</body>
+</html>

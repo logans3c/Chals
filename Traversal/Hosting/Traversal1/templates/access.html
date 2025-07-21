@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Optional: Link to a CSS file -->
+    <style>
+        .flash { padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .flash.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .flash.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .flash.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        label { display: block; margin-top: 10px; }
+        input[type=text], input[type=password] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        input[type=submit] { margin-top: 15px; padding: 10px 15px; cursor: pointer; }
+    </style>
+    <script src="/static/script.js"></script>
+</head>
+<body>
+    <div class="container" style="max-width: 400px; margin: 40px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+        <h2>Login</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" action="/access">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="pwd">Password:</label>
+                <input type="password" id="pwd" name="pwd" required>
+            </div>
+            <div>
+                <input type="submit" value="Login">
+            </div>
+        </form>
+        <hr style="margin: 20px 0;">
+        <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+    </div>
+</body>
+</html>

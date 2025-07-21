@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Optional: Link to a CSS file -->
+     <style>
+        body { font-family: sans-serif; }
+        .container { max-width: 800px; margin: 20px auto; padding: 15px; }
+        form div { margin-bottom: 10px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type=text], input[type=submit] { padding: 8px; }
+        input[type=text] { width: 100%; box-sizing: border-box; }
+        input[type=submit] { cursor: pointer; }
+        .flash { padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .flash.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello, {{ user['username'] }}!</h1>
+        <p><a href="/entries">View Your Entries</a></p>
+        <hr>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <h2>Leave Feedback</h2>
+        {% if request.args.get('feedback') == 'sent' %}
+            <p style="color: green;">Thanks for your feedback!</p>
+        {% endif %}
+        <form method="post" action="/feedback">
+            <div>
+                <label for="entry">Feedback:</label>
+                <input type="text" id="entry" name="entry" required>
+            </div>
+            <div>
+                <input type="submit" value="Send Feedback">
+            </div>
+        </form>
+        <hr>
+
+        <h2>Latest Feedbacks</h2>
+        {% if latest_feedbacks %}
+          <ul>
+            {% for fb in latest_feedbacks %}
+              <li>{{ fb }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No feedbacks yet.</p>
+        {% endif %}
+        <hr>
+        <p><a href="/logout">Logout</a></p>
+    </div>
+</body>
+</html>
